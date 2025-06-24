@@ -47,7 +47,7 @@ JWT_SECRET=benimsirlimoodmelody
    GEMINI_API_KEY=your_gemini_api_key
    ```
 
-### ☁️ MongoDB URI Alma
+###  MongoDB URI Alma
 
 Uygulama, MongoDB veritabanına bağlanmak için bir bağlantı URI'sine ihtiyaç duyar. İki farklı yöntemle bu bağlantıyı sağlayabilirsiniz:
 
