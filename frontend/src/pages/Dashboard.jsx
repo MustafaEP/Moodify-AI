@@ -9,7 +9,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate(); 
-
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -18,10 +18,21 @@ function Dashboard() {
           navigate('/login');
           return;
         }
+
         const decoded = jwt_decode(token);
         const userId = decoded.id;
-        const res = await api.get(`users/profile/${userId}`);
-        setProfile(res.data);
+
+        const [profileRes, topArtistRes] = await Promise.all([
+          api.get(`users/profile/${userId}`),
+          api.get(`favorites/top-artist/${userId}`),
+        ]);
+
+        setProfile({
+          ...profileRes.data,
+          topArtist: topArtistRes.data.topArtist || 'Belirsiz',
+          topArtistCount: topArtistRes.data.count || 0,
+        });
+
       } catch (err) {
         console.error('Profil bilgileri alınamadı:', err);
         setError('Profil bilgileri yüklenirken bir hata oluştu.');
@@ -32,6 +43,7 @@ function Dashboard() {
 
     fetchProfile();
   }, [navigate]);
+
 
   const getMoodEmoji = (mood) => {
     const moodEmojis = {
@@ -147,6 +159,8 @@ function Dashboard() {
     );
   }
 
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
@@ -192,9 +206,9 @@ function Dashboard() {
           <div className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium">En Çok Sanatçı</p>
+                <p className="text-gray-400 text-sm font-medium">Favori Sanatçı</p>
                 <p className="text-lg font-bold text-white truncate" title={profile?.topArtist}>
-                  {profile?.topArtist || 'Belirsiz'}
+                  {profile?.topArtist || 'Belirsiz'} 
                 </p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center">
