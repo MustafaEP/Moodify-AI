@@ -20,7 +20,7 @@ const getRegionMusicSuggestions = async (region) => {
                             { "trackName": "şarkı 2", "artistName": "sanatçı 2" },
                             ...
                             { "trackName": "şarkı 10", "artistName": "sanatçı 10" }
-                        ]
+                          ]
                         }
 
                         Sadece geçerli JSON verisi üret, açıklama ekleme.

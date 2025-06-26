@@ -45,7 +45,7 @@ router.get('/ai-playlist/:userId', verifyToken, async (req, res) => {
   }
 });
 
-
+//Yapay Zeka Destekli Mood Playlist Backend
 router.post('/ai-structured-playlist', verifyToken, async (req, res) => {
   const { message } = req.body;
  
@@ -112,7 +112,7 @@ router.get('/mood-music', async (req, res) => {
   const result = await getMoodMusicSuggestions(mood);
   if (!result) return res.status(500).json({ message: 'Gemini yanıtı alınamadı' });
 
-  // Spotify linkleri ekleyelim
+  // Spotify linkleri ekleniyor
   const tracksWithSpotify = await Promise.all(result.songs.map(async (song) => {
     const spotifyData = await searchTrackOnSpotify(song.trackName, song.artistName);
     return {

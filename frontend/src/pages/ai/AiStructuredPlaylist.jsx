@@ -86,6 +86,27 @@ function AiStructuredPlaylist() {
     return moodEmojis[mood?.toLowerCase()] || '🎭';
   };
 
+  const getMoodTurkish = (mood) => {
+    const moodTranslations = {
+      'happy': 'Mutlu',
+      'sad': 'Üzgün',
+      'angry': 'Kızgın',
+      'excited': 'Heyecanlı',
+      'calm': 'Sakin',
+      'energetic': 'Enerjik',
+      'romantic': 'Romantik',
+      'nostalgic': 'Nostaljik',
+      'melancholic': 'Melankolik',
+      'peaceful': 'Huzurlu',
+      'dreamy': 'Hayalperest',
+      'anxious': 'Endişeli',
+      'hopeful': 'Umutlu',
+      'confident': 'Kendinden Emin'
+    };
+
+    return moodTranslations[mood?.toLowerCase()] || 'Bilinmeyen Ruh Hali';
+  };
+
   const getFavoriteButton = (track) => {
     const state = favoriteStates[track.id] || 'normal';
     
@@ -208,7 +229,7 @@ function AiStructuredPlaylist() {
             <div className="text-center mb-6">
               <div className="text-4xl mb-2">{getMoodEmoji(moodInfo.mood)}</div>
               <h3 className="text-2xl font-bold text-white">
-                Tahmin Edilen Mood: <span className="text-purple-400">{moodInfo.mood}</span>
+                Tahmin Edilen Mood: <span className="text-purple-400">{getMoodTurkish(moodInfo.mood)}</span>
               </h3>
             </div>
             

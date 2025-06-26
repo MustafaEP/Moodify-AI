@@ -121,7 +121,6 @@ const Navigation = () => {
     <nav className="bg-gray-800 border-b border-gray-700 shadow-2xl backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo */}
           <div className="flex items-center">
             <Link to="/dashboard" className="flex items-center space-x-2 text-xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text hover:from-purple-300 hover:via-pink-300 hover:to-blue-300 transition-all duration-300">
               <div className="flex items-center space-x-1">
