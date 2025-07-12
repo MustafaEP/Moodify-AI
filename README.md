@@ -1,6 +1,6 @@
 # Moodify-AI
 
-**Moodify-AI**, Spotify ve Gemini AI gibi servislerle entegre çalışan tam yığın bir web uygulamasıdır. Bu dökümanda uygulamayı nasıl çalıştırabileceğiniz adım adım açıklanmıştır.
+**Moodify-AI**, Spotify ve Gemini AI gibi servislerle entegre çalışan kişinin ruh haline göre müzik öneren tam yığın bir web uygulamasıdır. Bu dökümanda uygulamayı nasıl çalıştırabileceğiniz adım adım açıklanmıştır.
 
 ---
 
