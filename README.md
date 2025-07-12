@@ -94,3 +94,8 @@ MONGO_URI=mongodb://localhost:27017/moodmelody
    npm run dev
    ```
    
+##  Uygulama Görselleri
+
+<img width="1118" height="968" alt="AI" src="https://github.com/user-attachments/assets/367840b3-9715-4bae-8508-79c42d35947e" />
+<img width="1181" height="841" alt="music" src="https://github.com/user-attachments/assets/68046fd4-97d8-4d4e-a88f-a6b1d3f084d6" />
+
