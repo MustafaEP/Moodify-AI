@@ -1,49 +1,26 @@
-const axios = require('axios');
-const config = require('../config');
+/**
+ * Mood bazlı müzik önerisi - Gemini ile şarkı listesi
+ * @module utils/geminiRequestMood
+ */
+const { generateContent } = require('./gemini/client');
+const { parseJsonResponse } = require('./gemini/parseResponse');
+const { PROMPT } = require('./gemini/prompts');
+const { GENERATION_CONFIG } = require('./gemini/constants');
 
-const getMoodMusicSuggestions = async (mood) => {
+/**
+ * Verilen mood'a uygun müzik önerileri alır
+ *
+ * @param {string} mood - Duygu adı (örn: happy, sad)
+ * @returns {Promise<{mood: string, songs: Array<{trackName: string, artistName: string}>}|null>}
+ */
+async function getMoodMusicSuggestions(mood) {
   try {
-    const res = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.gemini.apiKey}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: `
-                        Bana bu "${mood}" duygusuna göre 10 türkçe ve yabancı müzik önerisi yap.
-                        Her öneri şarkının adı ve sanatçısı olacak şekilde aşağıdaki JSON formatında dön:
-
-                        {
-                        "mood": "Duygu",
-                        "songs": [
-                            { "trackName": "şarkı 1", "artistName": "sanatçı 1" },
-                            { "trackName": "şarkı 2", "artistName": "sanatçı 2" },
-                            ...
-                            { "trackName": "şarkı 10", "artistName": "sanatçı 10" }
-                        ]
-                        }
-
-                        Sadece geçerli JSON verisi üret, açıklama ekleme.
-                    `
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 500
-        }
-      }
-    );
-
-    const aiText = res.data.candidates[0].content.parts[0].text;
-    const cleanText = aiText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(cleanText);
-    return parsed;
-
+    const rawText = await generateContent(PROMPT.moodMusic(mood), {
+      generationConfig: GENERATION_CONFIG.mood,
+    });
+    return parseJsonResponse(rawText);
   } catch (err) {
-    console.error('Gemini yöresel müzik hatası:', err.message);
+    console.error('[Gemini] Mood müzik hatası:', err.message);
     return null;
   }
 }

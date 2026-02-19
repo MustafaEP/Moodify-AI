@@ -1,52 +1,33 @@
-const axios = require('axios');
-const config = require('../config');
+/**
+ * Yapılandırılmış duygu analizi - mood, reason, genre, keywords
+ * @module utils/geminiRequestStructured
+ */
+const { generateContent } = require('./gemini/client');
+const { parseJsonResponse } = require('./gemini/parseResponse');
+const { PROMPT } = require('./gemini/prompts');
+const { GENERATION_CONFIG } = require('./gemini/constants');
 
-const getStructuredMoodFromGemini = async (message) => {
+/**
+ * Kullanıcı mesajından detaylı duygu analizi yapar
+ *
+ * @param {string} message - Kullanıcının yazdığı mesaj
+ * @returns {Promise<{
+ *   mood: string,
+ *   reason: string,
+ *   genre: string,
+ *   suggestedKeywords: string[]
+ * }|null>}
+ */
+async function getStructuredMoodFromGemini(message) {
   try {
-    const res = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.gemini.apiKey}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: `
-                        Kullanıcının mesajı:
-                        "${message}"
-
-                        Görev:
-                        Bu mesajı analiz et ve aşağıdaki JSON formatında duygu analizi yap:
-                        {
-                            "mood": "calm | happy | sad | energetic | angry | dreamy | nostalgic | romantic | anxious | hopeful | confident | melancholic",
-                            "reason": "<analiz açıklaması>",
-                            "genre": "<uygun müzik türü>",
-                            "suggestedKeywords": ["kelime1", "kelime2", ...]
-                        }
-
-                        Sadece geçerli JSON çıktısı üret. Açıklama ekleme.
-                    `
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.4,
-          maxOutputTokens: 200,
-          topK: 1
-        }
-      }
-    );
-    
-    const aiText = res.data.candidates[0].content.parts[0].text;
-    const cleanText = aiText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(cleanText);
-    
-    return parsed;
-
+    const rawText = await generateContent(PROMPT.structuredMood(message), {
+      generationConfig: GENERATION_CONFIG.structured,
+    });
+    return parseJsonResponse(rawText);
   } catch (err) {
-    console.error('Gemini structured error:', err.message);
+    console.error('[Gemini] Structured mood hatası:', err.message);
     return null;
   }
-};
+}
 
 module.exports = getStructuredMoodFromGemini;

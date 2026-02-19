@@ -1,49 +1,26 @@
-const axios = require('axios');
-const config = require('../config');
+/**
+ * Yöresel müzik önerisi - Gemini ile bölge bazlı şarkı listesi
+ * @module utils/geminiRegionRequest
+ */
+const { generateContent } = require('./gemini/client');
+const { parseJsonResponse } = require('./gemini/parseResponse');
+const { PROMPT } = require('./gemini/prompts');
+const { GENERATION_CONFIG } = require('./gemini/constants');
 
-const getRegionMusicSuggestions = async (region) => {
+/**
+ * Verilen yöre/bölgeye ait geleneksel müzik önerileri alır
+ *
+ * @param {string} region - Yöre adı (örn: Karadeniz, Ege)
+ * @returns {Promise<{region: string, songs: Array<{trackName: string, artistName: string}>}|null>}
+ */
+async function getRegionMusicSuggestions(region) {
   try {
-    const res = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.gemini.apiKey}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: `
-                        Bana "${region}" yöresine ait 10 geleneksel veya yöresel müzik önerisi yap.
-                        Her öneri şarkının adı ve sanatçısı olacak şekilde aşağıdaki JSON formatında dön:
-
-                        {
-                        "region": "yöre adı",
-                        "songs": [
-                            { "trackName": "şarkı 1", "artistName": "sanatçı 1" },
-                            { "trackName": "şarkı 2", "artistName": "sanatçı 2" },
-                            ...
-                            { "trackName": "şarkı 10", "artistName": "sanatçı 10" }
-                          ]
-                        }
-
-                        Sadece geçerli JSON verisi üret, açıklama ekleme.
-                    `
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 500
-        }
-      }
-    );
-
-    const aiText = res.data.candidates[0].content.parts[0].text;
-    const cleanText = aiText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(cleanText);
-    return parsed;
-
+    const rawText = await generateContent(PROMPT.regionMusic(region), {
+      generationConfig: GENERATION_CONFIG.region,
+    });
+    return parseJsonResponse(rawText);
   } catch (err) {
-    console.error('Gemini yöresel müzik hatası:', err.message);
+    console.error('[Gemini] Yöresel müzik hatası:', err.message);
     return null;
   }
 }
