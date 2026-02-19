@@ -1,5 +1,6 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const config = require('../config');
 const getMoodFromGemini = require('../utils/geminiRequest')
 const MoodHistory = require('../models/MoodHistory')
 const verifyToken = require('../middleware/verifyToken')
@@ -15,7 +16,7 @@ router.post('/predict-and-recommend', verifyToken, async (req, res) => {
 
     // Spotify’dan mood’a göre şarkı öner
     const token = await getSpotifyToken()
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { 'Authorization': `Bearer ${token}` },
       params: { q: mood, type: 'track', limit: 5 }
     })
@@ -48,7 +49,7 @@ router.post('/musics-from-mood', verifyToken, async (req, res) => {
 
     // Spotify’dan mood’a göre şarkı öner
     const token = await getSpotifyToken()
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { 'Authorization': `Bearer ${token}` },
       params: { q: mood, type: 'track', limit: 5 }
     })

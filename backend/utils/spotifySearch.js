@@ -1,11 +1,12 @@
 const axios = require('axios');
 const getSpotifyToken = require('./spotifyToken');
+const config = require('../config');
 
 const searchTrackOnSpotify = async (trackName, artistName) => {
   try {
     const token = await getSpotifyToken();
 
-    const response = await axios.get('https://api.spotify.com/v1/search', {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: {
         Authorization: `Bearer ${token}`
       },

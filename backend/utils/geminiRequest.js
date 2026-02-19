@@ -1,10 +1,9 @@
-const axios = require('axios')
-
-const geminiApiKey = process.env.GEMINI_API_KEY
+const axios = require('axios');
+const config = require('../config');
 
 const getMoodFromGemini = async (message) => {
   try {
-    const res = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+    const res = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.gemini.apiKey}`, {
       contents: [
         {
           parts: [{ 

@@ -4,6 +4,7 @@ const getSpotifyToken = require('../utils/spotifyToken');
 const MoodHistory = require('../models/MoodHistory');
 const mongoose = require('mongoose');
 const verifyToken = require('../middleware/verifyToken');
+const config = require('../config');
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get('/search', async (req, res) => {
     const token = await getSpotifyToken();
     const { q } = req.query;
 
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { 'Authorization': `Bearer ${token}` },
       params: { q, type: 'track', limit: 10 }
     });
@@ -44,7 +45,7 @@ router.get('/recommend/:userId', verifyToken, async (req, res) => {
     const token = await getSpotifyToken();
 
     // Mood'a göre Spotify'dan şarkı çek
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { 'Authorization': `Bearer ${token}` },
       params: { q: mostUsedMood, type: 'track', limit: 5 }
     });

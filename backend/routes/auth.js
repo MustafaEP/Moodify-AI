@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const verifyToken = require('../middleware/verifyToken');
+const config = require('../config');
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
+      config.jwtSecret,
       { expiresIn: '1d' }
     );
 
@@ -54,12 +55,12 @@ router.post('/refresh-token', (req, res) => {
 
   if (!refreshToken) return res.status(401).json('Refresh token yok');
 
-  jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(refreshToken, config.jwtSecret, (err, decoded) => {
     if (err) return res.status(403).json('Geçersiz refresh token');
 
     const newToken = jwt.sign(
       { id: decoded.id, email: decoded.email },
-      process.env.JWT_SECRET,
+      config.jwtSecret,
       { expiresIn: '1d' }
     );
 

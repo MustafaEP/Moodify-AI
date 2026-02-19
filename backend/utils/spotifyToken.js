@@ -1,4 +1,5 @@
 const axios = require('axios');
+const config = require('../config');
 
 let token = null;
 let tokenExpiresAt = 0;
@@ -12,11 +13,11 @@ async function getSpotifyToken() {
   const params = new URLSearchParams();
   params.append('grant_type', 'client_credentials');
 
-  const response = await axios.post(process.env.SPOTIFY_TOKEN_URL, params, {
+  const response = await axios.post(config.spotify.tokenUrl, params, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + Buffer.from(
-        `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+        `${config.spotify.clientId}:${config.spotify.clientSecret}`
       ).toString('base64')
     }
   });

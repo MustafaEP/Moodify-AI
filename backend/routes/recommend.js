@@ -1,5 +1,6 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const config = require('../config');
 const MoodHistory = require('../models/MoodHistory')
 const verifyToken = require('../middleware/verifyToken')
 const getSpotifyToken = require('../utils/spotifyToken')
@@ -30,7 +31,7 @@ router.get('/ai-playlist/:userId', verifyToken, async (req, res) => {
 
     // Spotify’dan öneri al
     const token = await getSpotifyToken()
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { 'Authorization': `Bearer ${token}` },
       params: { q: mood, type: 'track', limit: 8 }
     })
@@ -57,7 +58,7 @@ router.post('/ai-structured-playlist', verifyToken, async (req, res) => {
  
     const query = moodData.suggestedKeywords.join(' ') || moodData.mood;
  
-    const response = await axios.get(`${process.env.SPOTIFY_API_URL}/search`, {
+    const response = await axios.get(`${config.spotify.apiUrl}/search`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { q: query, type: 'track', limit: 10 }
     });
