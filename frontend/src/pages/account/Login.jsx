@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../App'; // AuthContext'i import et
+import config from '../../config';
+import { useAuth } from '../../App';
 
 function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -22,7 +23,7 @@ function Login() {
     setError('');
     
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', form);
+      const res = await axios.post(config.apiBaseUrl + '/auth/login', form);
       
       // Token'ı hem localStorage'a kaydet hem de AuthContext'e bildir
       localStorage.setItem('token', res.data.token);

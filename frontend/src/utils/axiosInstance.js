@@ -1,8 +1,8 @@
-import axios from 'axios'
-import jwt_decode from 'jwt-decode'
+import axios from 'axios';
+import config from '../config';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/api/',
+  baseURL: config.apiBaseUrl + '/',
 });
 
 // Token ekleme interceptor
@@ -33,7 +33,7 @@ instance.interceptors.response.use(
       }
 
       try {
-        const res = await axios.post('http://localhost:5000/api/auth/refresh-token', {
+        const res = await axios.post(config.apiBaseUrl + '/auth/refresh-token', {
           refreshToken
         });
 

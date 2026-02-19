@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import config from '../../config';
 
 function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
@@ -56,7 +57,7 @@ function Register() {
     
     try {
       const { confirmPassword, ...submitData } = form; // confirmPassword'u çıkar
-      await axios.post('http://localhost:5000/api/auth/register', submitData);
+      await axios.post(config.apiBaseUrl + '/auth/register', submitData);
       
       setSuccess('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...');
       

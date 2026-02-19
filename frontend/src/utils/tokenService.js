@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios from 'axios';
+import config from '../config';
 
 export const refreshToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');
@@ -8,7 +9,7 @@ export const refreshToken = async () => {
   }
 
   try {
-    const res = await axios.post('http://localhost:5000/api/auth/refresh-token', {
+    const res = await axios.post(config.apiBaseUrl + '/auth/refresh-token', {
       refreshToken
     });
     localStorage.setItem('token', res.data.token);
