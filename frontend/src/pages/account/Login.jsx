@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authApi } from '../../api';
-import { useAuth } from '../../App';
+import { useAuth } from '../../contexts';
 import { Alert, SubmitButton } from '../../components';
 
 function Login() {

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { useState, useEffect, createContext, useContext } from 'react';
+import { AuthProvider, useAuth } from './contexts';
+import { LoadingPage } from './components';
 import Register from './pages/account/Register';
 import Login from './pages/account/Login';
 import Search from './pages/Search';
@@ -10,62 +12,6 @@ import ProfileUpdate from './pages/ProfileUpdate';
 import AiMoodHistory from './pages/ai/AiMoodHistory';
 import AiStructuredPlaylist from './pages/ai/AiStructuredPlaylist';
 import RegionMusic from './pages/RegionMusic';
-import { LoadingPage } from './components';
-
-// Authentication Context
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
-// Authentication Provider
-const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-    // Dark mode stilleri
-    document.documentElement.classList.add('dark');
-    document.body.classList.add('dark', 'bg-gray-900', 'text-gray-100');
-
-    const token = localStorage.getItem('authToken') || localStorage.getItem('token');
-
-    if (token && token !== "undefined" && token !== "null") {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-
-    setLoading(false);
-  }, []);
-
-
-
-  const login = (token) => {
-    localStorage.setItem('authToken', token);
-    setIsAuthenticated(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-  };
-
-  const value = {
-    isAuthenticated,
-    login,
-    logout,
-    loading
-  };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -253,7 +199,7 @@ function App() {
               <Route path="/update-profile" element={<ProtectedRoute><ProfileUpdate /></ProtectedRoute>} />
               <Route path="/ai-mood-history" element={<ProtectedRoute><AiMoodHistory /></ProtectedRoute>} />
               <Route path="/ai-structured-playlist" element={<ProtectedRoute><AiStructuredPlaylist /></ProtectedRoute>} />
-              <Route path="/region-music" element={<RegionMusic />} />
+              <Route path="/region-music" element={<ProtectedRoute><RegionMusic /></ProtectedRoute>} />
 
               {/* Default Routes */}
               <Route path="/" element={<Navigate to="/login" replace />} />
