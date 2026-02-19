@@ -1,0 +1,10 @@
+{
+  "name": "Moodify AI",
+  "short_name": "Moodify",
+  "description": "Ruh halinize uygun müzik keşfedin",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#8B5CF6",
+  "icons": []
+}

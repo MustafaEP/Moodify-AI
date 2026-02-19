@@ -17,7 +17,7 @@ const GENERATION_CONFIG = {
   simple: { temperature: 0.3, maxOutputTokens: 500 },
   mood:   { temperature: 0.3, maxOutputTokens: 500 },
   region: { temperature: 0.3, maxOutputTokens: 500 },
-  structured: { temperature: 0.4, maxOutputTokens: 200, topK: 1 },
+  structured: { temperature: 0.3, maxOutputTokens: 300 },
 };
 
 module.exports = {

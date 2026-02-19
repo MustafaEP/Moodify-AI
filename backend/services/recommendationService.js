@@ -42,7 +42,8 @@ async function getAiStructuredPlaylist(userId, message) {
   const moodData = await getStructuredMoodFromGemini(message);
 
   const token = await getSpotifyToken();
-  const query = moodData.suggestedKeywords.join(' ') || moodData.mood;
+  const keywords = Array.isArray(moodData.suggestedKeywords) ? moodData.suggestedKeywords : [];
+  const query = keywords.join(' ') || moodData.mood || 'chill';
 
   const response = await axios.get(`${config.spotify.apiUrl}/search`, {
     headers: { Authorization: `Bearer ${token}` },

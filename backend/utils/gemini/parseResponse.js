@@ -1,13 +1,15 @@
 /**
  * Gemini API JSON yanıtlarını parse etmek için yardımcı fonksiyonlar
  */
+const { jsonrepair } = require('jsonrepair');
 const AppError = require('../AppError');
 const JSON_BLOCK_REGEX = /```(?:json)?\s*([\s\S]*?)```/;
 const FALLBACK_REGEX = /```(?:json)?|```/g;
 
 /**
  * AI yanıtından JSON objesini çıkarır
- * Markdown code block'ları temizler, parse eder
+ * Markdown code block'ları temizler, parse eder.
+ * Parse başarısızsa jsonrepair ile onarıp tekrar dener (tek tırnak, tırnaksız anahtar vb.)
  *
  * @param {string} rawText - Ham AI yanıtı
  * @param {Object} [options] - Seçenekler
@@ -36,12 +38,16 @@ function parseJsonResponse(rawText, options = {}) {
 
   try {
     return JSON.parse(cleanText);
-  } catch (parseErr) {
-    const parseDetail = parseErr.message || 'JSON ayrıştırma hatası';
-    throw new AppError(
-      `${context}: Geçerli JSON alınamadı (${parseDetail}). AI yanıtı işlenemedi, lütfen tekrar deneyin.`,
-      502
-    );
+  } catch {
+    try {
+      return JSON.parse(jsonrepair(cleanText));
+    } catch (parseErr) {
+      const parseDetail = parseErr.message || 'JSON ayrıştırma hatası';
+      throw new AppError(
+        `${context}: Geçerli JSON alınamadı (${parseDetail}). AI yanıtı işlenemedi, lütfen tekrar deneyin.`,
+        502
+      );
+    }
   }
 }
 

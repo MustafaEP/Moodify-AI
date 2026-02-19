@@ -243,7 +243,7 @@ function AiStructuredPlaylist() {
                   Spotify Arama Etiketleri
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {moodInfo.suggestedKeywords.map((keyword, index) => (
+                  {(moodInfo.suggestedKeywords ?? []).map((keyword, index) => (
                     <span 
                       key={index}
                       className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm"

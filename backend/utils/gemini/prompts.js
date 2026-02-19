@@ -12,53 +12,36 @@ Cevabın sadece mood kelimesi olsun.`,
 
   /** Mood bazlı şarkı önerileri - JSON */
   moodMusic: (mood) =>
-    `Bana "${mood}" duygusuna göre 10 türkçe ve yabancı müzik önerisi yap.
-Her öneri şarkının adı ve sanatçısı olacak şekilde aşağıdaki JSON formatında dön:
+    `"${mood}" duygusuna göre 10 türkçe ve yabancı müzik önerisi yap. Yanıtında sadece aşağıdaki JSON yapısını üret, başka hiçbir metin ekleme:
 
-{
-  "mood": "Duygu",
-  "songs": [
-    { "trackName": "şarkı 1", "artistName": "sanatçı 1" },
-    { "trackName": "şarkı 2", "artistName": "sanatçı 2" },
-    ...
-    { "trackName": "şarkı 10", "artistName": "sanatçı 10" }
-  ]
-}
+{"mood":"${mood}","songs":[{"trackName":"şarkı adı","artistName":"sanatçı adı"},...]}
 
-Sadece geçerli JSON verisi üret, açıklama ekleme.`,
+Her şarkı için trackName ve artistName zorunlu. Toplam 10 şarkı. Sadece JSON çıktı ver.`,
 
   /** Yöresel müzik önerileri - JSON */
   regionMusic: (region) =>
-    `Bana "${region}" yöresine ait 10 geleneksel veya yöresel müzik önerisi yap.
-Her öneri şarkının adı ve sanatçısı olacak şekilde aşağıdaki JSON formatında dön:
+    `"${region}" yöresine ait 10 geleneksel veya yöresel müzik önerisi yap. Yanıtında sadece aşağıdaki JSON yapısını üret, başka hiçbir metin ekleme:
 
-{
-  "region": "yöre adı",
-  "songs": [
-    { "trackName": "şarkı 1", "artistName": "sanatçı 1" },
-    { "trackName": "şarkı 2", "artistName": "sanatçı 2" },
-    ...
-    { "trackName": "şarkı 10", "artistName": "sanatçı 10" }
-  ]
-}
+{"region":"${region}","songs":[{"trackName":"şarkı adı","artistName":"sanatçı adı"},...]}
 
-Sadece geçerli JSON verisi üret, açıklama ekleme.`,
+Her şarkı için trackName ve artistName zorunlu. Toplam 10 şarkı. Sadece JSON çıktı ver.`,
 
   /** Yapılandırılmış duygu analizi - JSON */
   structuredMood: (message) =>
-    `Kullanıcının mesajı:
-"${message}"
+    `Aşağıdaki kullanıcı mesajını analiz et ve duygu analizi yap. Yanıtında SADECE geçerli JSON üret, başka hiçbir metin yazma.
 
-Görev:
-Bu mesajı analiz et ve aşağıdaki JSON formatında duygu analizi yap:
+Mesaj: "${message.replace(/"/g, '\\"')}"
+
+JSON yapısı (bu anahtarları kullan, çift tırnak kullan):
 {
-  "mood": "calm | happy | sad | energetic | angry | dreamy | nostalgic | romantic | anxious | hopeful | confident | melancholic",
-  "reason": "<analiz açıklaması>",
-  "genre": "<uygun müzik türü>",
-  "suggestedKeywords": ["kelime1", "kelime2", ...]
+  "mood": "calm",
+  "reason": "kısa analiz",
+  "genre": "müzik türü",
+  "suggestedKeywords": ["kelime1", "kelime2"]
 }
 
-Sadece geçerli JSON çıktısı üret. Açıklama ekleme.`,
+mood sadece şunlardan biri olmalı: calm, happy, sad, energetic, angry, dreamy, nostalgic, romantic, anxious, hopeful, confident, melancholic
+suggestedKeywords: müzik araması için 2-5 İngilizce kelime. Sadece JSON çıktı ver.`,
 };
 
 module.exports = { PROMPT };
