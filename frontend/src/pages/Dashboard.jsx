@@ -141,8 +141,8 @@ function Dashboard() {
           <div className="text-6xl mb-4">⚠️</div>
           <h3 className="text-xl text-red-400 mb-2">Hata Oluştu</h3>
           <p className="text-gray-400">{error}</p>
-          <button 
-            onClick={() => window.location.reload()}
+          <button
+            onClick={() => navigate(0)}
             className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
           >
             Tekrar Dene
@@ -243,7 +243,7 @@ function Dashboard() {
               </div>
             </div>
             <button
-              onClick={() => window.location.href = '/update-profile'}
+              onClick={() => navigate('/update-profile')}
               className="cursor-pointer px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium"
             >
               Profili Düzenle
@@ -261,7 +261,7 @@ function Dashboard() {
             {quickActions.map((action, index) => (
               <button
                 key={index}
-                onClick={() => window.location.href = action.link}
+                onClick={() => navigate(action.link)}
                 className={`cursor-pointer relative overflow-hidden bg-gradient-to-r ${action.color} p-6 rounded-xl text-white transition-all duration-300 hover:scale-105 hover:shadow-xl group`}
               >
                 <div className="flex flex-col items-center space-y-3">

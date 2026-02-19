@@ -267,13 +267,13 @@ function Favorites() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => window.location.href = '/search'}
+                onClick={() => navigate('/search')}
                 className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium"
               >
                 🔍 Şarkı Ara
               </button>
               <button
-                onClick={() => window.location.href = '/ai-playlist'}
+                onClick={() => navigate('/ai-structured-playlist')}
                 className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors font-medium"
               >
                 🤖 AI Playlist
