@@ -1,36 +1,22 @@
 /**
  * Auth Controller
- * Kimlik doğrulama iş mantığı: register, login, token doğrulama, refresh
+ * HTTP katmanı: req/res işleme, service çağrısı
  */
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const authService = require('../services/authService');
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 const AppError = require('../utils/AppError');
 
 async function register(req, res) {
   const { username, email, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const newUser = new User({ username, email, password: hashed });
-  await newUser.save();
+  await authService.register(username, email, password);
   res.status(201).json('Kayıt başarılı');
 }
 
 async function login(req, res) {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) throw new AppError('Kullanıcı bulunamadı', 404);
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new AppError('Hatalı şifre', 400);
-
-  const token = jwt.sign(
-    { id: user._id, email: user.email },
-    config.jwtSecret,
-    { expiresIn: '1d' }
-  );
-
-  res.json({ token, username: user.username });
+  const result = await authService.login(email, password);
+  res.json(result);
 }
 
 function validateToken(req, res) {

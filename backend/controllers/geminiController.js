@@ -1,57 +1,19 @@
 /**
  * Gemini Controller
- * Gemini AI ile mood tahmini ve müzik önerisi iş mantığı
+ * HTTP katmanı: req/res işleme, service çağrısı
  */
-const getMoodFromGemini = require('../utils/geminiRequest');
-const MoodHistory = require('../models/MoodHistory');
-const axios = require('axios');
-const getSpotifyToken = require('../utils/spotifyToken');
-const config = require('../config');
+const geminiService = require('../services/geminiService');
 
 async function predictAndRecommend(req, res) {
   const { message } = req.body;
-  const mood = await getMoodFromGemini(message);
-
-  const token = await getSpotifyToken();
-  const response = await axios.get(`${config.spotify.apiUrl}/search`, {
-    headers: { Authorization: `Bearer ${token}` },
-    params: { q: mood, type: 'track', limit: 5 },
-  });
-
-  const tracks = response.data.tracks.items;
-
-  await MoodHistory.create({
-    userId: req.user.id,
-    mood,
-    trackName: 'Gemini AI Mood Prediction',
-    artistName: 'AI',
-    spotifyUrl: '-',
-  });
-
-  res.json({ mood, tracks });
+  const result = await geminiService.predictAndRecommend(req.user.id, message);
+  res.json(result);
 }
 
 async function musicsFromMood(req, res) {
-  const { mood: moodInput } = req.body;
-  const moodPredicted = await getMoodFromGemini(moodInput);
-
-  const token = await getSpotifyToken();
-  const response = await axios.get(`${config.spotify.apiUrl}/search`, {
-    headers: { Authorization: `Bearer ${token}` },
-    params: { q: moodPredicted, type: 'track', limit: 5 },
-  });
-
-  const tracks = response.data.tracks.items;
-
-  await MoodHistory.create({
-    userId: req.user.id,
-    mood: moodPredicted,
-    trackName: 'Gemini AI Mood Prediction',
-    artistName: 'AI',
-    spotifyUrl: '-',
-  });
-
-  res.json({ mood: moodPredicted, tracks });
+  const { mood } = req.body;
+  const result = await geminiService.musicsFromMood(req.user.id, mood);
+  res.json(result);
 }
 
 module.exports = {
