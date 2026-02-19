@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { recommendApi, favoritesApi } from '../../api';
+import { Alert, SubmitButton, LoadingSpinner } from '../../components';
 
 function AiStructuredPlaylist() {
   const [message, setMessage] = useState('');
@@ -117,7 +118,7 @@ function AiStructuredPlaylist() {
             disabled 
             className="flex items-center px-3 py-1 bg-gray-600 text-gray-300 rounded-full text-sm cursor-not-allowed"
           >
-            <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin mr-1"></div>
+            <LoadingSpinner size="sm" color="gray" className="mr-1 inline-block" />
             Ekleniyor...
           </button>
         );
@@ -172,14 +173,7 @@ function AiStructuredPlaylist() {
 
         {/* Form Container */}
         <div className="bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 p-8 mb-8">
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-              <div className="flex items-center">
-                <span className="mr-2">⚠️</span>
-                {error}
-              </div>
-            </div>
-          )}
+          <Alert type="error" message={error} />
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -203,23 +197,14 @@ function AiStructuredPlaylist() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
-              disabled={loading || !message.trim()}
-              className="cursor-pointer w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-medium rounded-lg transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:scale-[1.02] disabled:hover:scale-100"
+            <SubmitButton
+              loading={loading}
+              disabled={!message.trim()}
+              loadingText="AI Playlist Oluşturuluyor..."
             >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  AI Playlist Oluşturuluyor...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  <span className="mr-2">🎶</span>
-                  AI Playlist Öner!
-                </div>
-              )}
-            </button>
+              <span className="mr-2">🎶</span>
+              AI Playlist Öner!
+            </SubmitButton>
           </form>
         </div>
 

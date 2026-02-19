@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '../api';
+import { LoadingPage, Alert, SubmitButton } from '../components';
 
 function ProfileUpdate() {
   const [form, setForm] = useState({ username: '', email: '', password: '', currentPassword: '' });
@@ -151,14 +152,7 @@ function ProfileUpdate() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400 text-lg">Kullanıcı bilgileri yükleniyor...</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message="Kullanıcı bilgileri yükleniyor..." />;
   }
 
   return (
@@ -179,25 +173,8 @@ function ProfileUpdate() {
 
         {/* Form Container */}
         <div className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-8">
-          {/* Success Message */}
-          {success && (
-            <div className="mb-6 p-4 bg-green-900/50 border border-green-500/50 rounded-lg text-green-200 text-sm">
-              <div className="flex items-center">
-                <span className="mr-2">✅</span>
-                {success}
-              </div>
-            </div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-              <div className="flex items-center">
-                <span className="mr-2">⚠️</span>
-                {error}
-              </div>
-            </div>
-          )}
+          <Alert type="success" message={success} />
+          <Alert type="error" message={error} />
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Input */}
@@ -313,23 +290,17 @@ function ProfileUpdate() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                type="submit"
-                disabled={updating || !hasChanges()}
-                className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-medium rounded-lg transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:scale-105 disabled:hover:scale-100"
-              >
-                {updating ? (
-                  <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Güncelleniyor...
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center">
-                    <span className="mr-2">💾</span>
-                    Değişiklikleri Kaydet
-                  </div>
-                )}
-              </button>
+              <div className="flex-1">
+                <SubmitButton
+                  loading={updating}
+                  disabled={!hasChanges()}
+                  loadingText="Güncelleniyor..."
+                  className="!w-full"
+                >
+                  <span className="mr-2">💾</span>
+                  Değişiklikleri Kaydet
+                </SubmitButton>
+              </div>
 
               <button
                 type="button"

@@ -9,7 +9,8 @@ import Favorites from './pages/Favorites';
 import ProfileUpdate from './pages/ProfileUpdate';
 import AiMoodHistory from './pages/ai/AiMoodHistory';
 import AiStructuredPlaylist from './pages/ai/AiStructuredPlaylist';
-import RegionMusic from './pages/RegionMusic'
+import RegionMusic from './pages/RegionMusic';
+import { LoadingPage } from './components';
 
 // Authentication Context
 const AuthContext = createContext();
@@ -66,22 +67,12 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// Loading Component
-const LoadingSpinner = () => (
-  <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-    <div className="text-center">
-      <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-gray-400 text-lg">Yükleniyor...</p>
-    </div>
-  </div>
-);
-
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingPage />;
   }
   
   return isAuthenticated ? children : <Navigate to="/login" replace />;
@@ -92,7 +83,7 @@ const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingPage />;
   }
   
   return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;

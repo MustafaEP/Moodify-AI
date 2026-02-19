@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { recommendApi, favoritesApi } from '../api'; 
+import { recommendApi, favoritesApi } from '../api';
+import { Alert, LoadingSpinner } from '../components'; 
 
 function RegionMusic() {
   const [region, setRegion] = useState('');
@@ -132,7 +133,7 @@ function RegionMusic() {
             disabled 
             className="flex items-center px-3 py-1 bg-gray-600 text-gray-300 rounded-full text-sm cursor-not-allowed"
           >
-            <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin mr-1"></div>
+            <LoadingSpinner size="sm" color="gray" className="mr-1 inline-block" />
             Ekleniyor...
           </button>
         );
@@ -229,7 +230,7 @@ function RegionMusic() {
             >
               {loading ? (
                 <div className="flex items-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <LoadingSpinner size="md" color="white" className="mr-2" />
                   Müzikler Aranıyor...
                 </div>
               ) : (
@@ -242,19 +243,12 @@ function RegionMusic() {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            <div className="flex items-center">
-              <span className="mr-2">⚠️</span>
-              {error}
-            </div>
-          </div>
-        )}
+        <Alert type="error" message={error} />
 
         {/* Loading State */}
         {loading && (
           <div className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-12 text-center">
-            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <LoadingSpinner size="xl" color="purple" className="mx-auto mb-4" />
             <p className="text-gray-400 text-lg">
               {selectedRegion && (
                 <span className="mr-2">{selectedRegion.emoji}</span>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { historyApi } from '../../api';
+import { LoadingPage, Alert, LoadingSpinner } from '../../components';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 function AiMoodHistory() {
@@ -123,14 +124,7 @@ function AiMoodHistory() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400 text-lg">Geçmiş veriler yükleniyor...</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message="Geçmiş veriler yükleniyor..." />;
   }
 
   return (
@@ -149,14 +143,7 @@ function AiMoodHistory() {
           </p>
         </div>
 
-        {error && (
-          <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-            <div className="flex items-center">
-              <span className="mr-2">⚠️</span>
-              {error}
-            </div>
-          </div>
-        )}
+        <Alert type="error" message={error} />
 
         {/* Chart Section */}
         {history.length > 0 && (
@@ -327,7 +314,7 @@ function AiMoodHistory() {
                       )
                     ) : (
                       <div className="text-center py-8">
-                        <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                        <LoadingSpinner size="lg" color="purple" className="mx-auto mb-2" />
                         <p className="text-gray-400">Müzikler yükleniyor...</p>
                       </div>
                     )}

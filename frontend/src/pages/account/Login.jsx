@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authApi } from '../../api';
 import { useAuth } from '../../App';
+import { Alert, SubmitButton } from '../../components';
 
 function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -63,16 +64,8 @@ function Login() {
 
         {/* Form Container */}
         <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700 backdrop-blur-sm">
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg text-red-200 text-sm">
-              <div className="flex items-center">
-                <span className="mr-2">⚠️</span>
-                {error}
-              </div>
-            </div>
-          )}
-          
+          <Alert type="error" message={error} />
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
@@ -125,24 +118,14 @@ function Login() {
               </div>
             </div>
             
-            {/* Submit Button */}
-            <button 
-              type="submit" 
-              disabled={loading || !form.email || !form.password}
-              className="cursor-pointer w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-medium rounded-lg transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:scale-[1.02] disabled:hover:scale-100"
+            <SubmitButton
+              loading={loading}
+              disabled={!form.email || !form.password}
+              loadingText="Giriş yapılıyor..."
             >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Giriş yapılıyor...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  <span className="mr-2">🚀</span>
-                  Giriş Yap
-                </div>
-              )}
-            </button>
+              <span className="mr-2">🚀</span>
+              Giriş Yap
+            </SubmitButton>
           </form>
           
           {/* Divider */}
