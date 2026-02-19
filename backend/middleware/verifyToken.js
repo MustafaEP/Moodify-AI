@@ -1,3 +1,10 @@
+/**
+ * JWT Token Doğrulama Middleware
+ *
+ * Gelen istekteki "authorization" başlığını kontrol eder ve JWT token'ı doğrular.
+ * Token eksik veya geçersizse hata fırlatır, aksi halde kullanıcı bilgisini (req.user) ekler.
+ */
+
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const AppError = require('../utils/AppError');

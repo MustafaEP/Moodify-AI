@@ -1,3 +1,9 @@
+/**
+ * User Model
+ * Kullanıcıları temsil eder (username, email, password).
+ * unique: true ile email benzersizdir.
+ */
+
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({

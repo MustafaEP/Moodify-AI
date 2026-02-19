@@ -1,3 +1,8 @@
+/**
+ * MoodHistory Model
+ * Kullanıcıların ruh hali geçmişi ve ilgili şarkı (AI önerisi dahil) kayıtlarını tutar.
+ */
+
 const mongoose = require('mongoose')
 
 const MoodHistorySchema = new mongoose.Schema({

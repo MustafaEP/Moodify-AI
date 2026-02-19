@@ -1,3 +1,10 @@
+/**
+ * MusicRecommendation Model
+ * Kullanıcının bir ruh hali kaydı (MoodHistory) için önerilmiş müzikleri tutar.
+ * Her kayıt: moodHistoryId, şarkı (Spotify bilgileri), sanatçı, albüm, vs. içerir.
+ * Performans için gerekli alanlara index verilmiştir.
+ */
+
 const mongoose = require('mongoose')
 
 const MusicRecommendationSchema = new mongoose.Schema({

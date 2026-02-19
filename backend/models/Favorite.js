@@ -1,3 +1,9 @@
+/**
+ * Favorite Model
+ * Kullanıcıların favori şarkılarını tutar.
+ * Her favori: userId, trackName, artistName, spotifyUrl ve eklenme tarihi içerir.
+ */
+
 const mongoose = require('mongoose');
 
 const FavoriteSchema = new mongoose.Schema({
