@@ -1,14 +1,13 @@
+/**
+ * Protected Routes
+ * HTTP katmanı: URL → middleware → controller
+ */
 const express = require('express');
 const verifyToken = require('../middleware/verifyToken');
+const protectedController = require('../controllers/protectedController');
 
 const router = express.Router();
 
-// Örnek korumalı endpoint
-router.get('/profile', verifyToken, (req, res) => {
-  res.json({
-    message: `Merhaba ${req.user.email}, MoodMelody AI profiline hoş geldin!`,
-    user: req.user
-  });
-});
+router.get('/profile', verifyToken, protectedController.getProfile);
 
 module.exports = router;
