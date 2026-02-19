@@ -11,18 +11,14 @@ const { GENERATION_CONFIG } = require('./gemini/constants');
  * Verilen yöre/bölgeye ait geleneksel müzik önerileri alır
  *
  * @param {string} region - Yöre adı (örn: Karadeniz, Ege)
- * @returns {Promise<{region: string, songs: Array<{trackName: string, artistName: string}>}|null>}
+ * @returns {Promise<{region: string, songs: Array<{trackName: string, artistName: string}>}>}
+ * @throws {AppError} API veya parse hatası
  */
 async function getRegionMusicSuggestions(region) {
-  try {
-    const rawText = await generateContent(PROMPT.regionMusic(region), {
-      generationConfig: GENERATION_CONFIG.region,
-    });
-    return parseJsonResponse(rawText);
-  } catch (err) {
-    console.error('[Gemini] Yöresel müzik hatası:', err.message);
-    return null;
-  }
+  const rawText = await generateContent(PROMPT.regionMusic(region), {
+    generationConfig: GENERATION_CONFIG.region,
+  });
+  return parseJsonResponse(rawText, { context: 'Yöresel müzik önerisi' });
 }
 
 module.exports = getRegionMusicSuggestions;

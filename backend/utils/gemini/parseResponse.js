@@ -1,6 +1,7 @@
 /**
  * Gemini API JSON yanıtlarını parse etmek için yardımcı fonksiyonlar
  */
+const AppError = require('../AppError');
 const JSON_BLOCK_REGEX = /```(?:json)?\s*([\s\S]*?)```/;
 const FALLBACK_REGEX = /```(?:json)?|```/g;
 
@@ -9,10 +10,20 @@ const FALLBACK_REGEX = /```(?:json)?|```/g;
  * Markdown code block'ları temizler, parse eder
  *
  * @param {string} rawText - Ham AI yanıtı
- * @returns {Object|null} Parse edilmiş obje veya null
+ * @param {Object} [options] - Seçenekler
+ * @param {string} [options.context] - Hata mesajında kullanılacak bağlam (örn: "Mood müzik")
+ * @returns {Object} Parse edilmiş obje
+ * @throws {AppError} Parse başarısız olduğunda
  */
-function parseJsonResponse(rawText) {
-  if (!rawText || typeof rawText !== 'string') return null;
+function parseJsonResponse(rawText, options = {}) {
+  const { context = 'AI yanıtı' } = options;
+
+  if (!rawText || typeof rawText !== 'string') {
+    throw new AppError(
+      `${context}: Boş veya geçersiz yanıt alındı.`,
+      502
+    );
+  }
 
   let cleanText = rawText.trim();
 
@@ -25,8 +36,12 @@ function parseJsonResponse(rawText) {
 
   try {
     return JSON.parse(cleanText);
-  } catch {
-    return null;
+  } catch (parseErr) {
+    const parseDetail = parseErr.message || 'JSON ayrıştırma hatası';
+    throw new AppError(
+      `${context}: Geçerli JSON alınamadı (${parseDetail}). AI yanıtı işlenemedi, lütfen tekrar deneyin.`,
+      502
+    );
   }
 }
 

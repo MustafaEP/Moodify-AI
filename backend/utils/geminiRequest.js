@@ -19,7 +19,7 @@ async function getMoodFromGemini(message) {
     });
     return text.trim();
   } catch (err) {
-    console.error('[Gemini] Basit mood hatası:', err.message);
+    console.error('[Gemini] Basit mood hatası (fallback: calm):', err.message);
     return DEFAULT_FALLBACK_MOOD;
   }
 }

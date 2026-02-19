@@ -2,7 +2,7 @@
  * Gemini API sabitleri
  * Model, endpoint ve varsayılan generation parametreleri tek noktadan yönetilir.
  */
-const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1';
 const DEFAULT_MODEL = 'gemini-2.5-flash';
 
 const VALID_MOODS = [

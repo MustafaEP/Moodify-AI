@@ -40,7 +40,6 @@ async function getAiPlaylist(userId) {
 
 async function getAiStructuredPlaylist(userId, message) {
   const moodData = await getStructuredMoodFromGemini(message);
-  if (!moodData) throw new AppError('AI yanıtı alınamadı', 500);
 
   const token = await getSpotifyToken();
   const query = moodData.suggestedKeywords.join(' ') || moodData.mood;
@@ -85,8 +84,6 @@ async function getMoodMusic(mood) {
   if (!mood) throw new AppError('Duygu adı gerekli', 400);
 
   const result = await getMoodMusicSuggestions(mood);
-  if (!result) throw new AppError('Gemini yanıtı alınamadı', 500);
-
   const tracksWithSpotify = await Promise.all(
     result.songs.map(async (song) => {
       const spotifyData = await searchTrackOnSpotify(song.trackName, song.artistName);
@@ -101,8 +98,6 @@ async function getRegionMusic(region) {
   if (!region) throw new AppError('Yöre adı gerekli', 400);
 
   const result = await getRegionMusicSuggestions(region);
-  if (!result) throw new AppError('Gemini yanıtı alınamadı', 500);
-
   const tracksWithSpotify = await Promise.all(
     result.songs.map(async (song) => {
       const spotifyData = await searchTrackOnSpotify(song.trackName, song.artistName);

@@ -16,18 +16,14 @@ const { GENERATION_CONFIG } = require('./gemini/constants');
  *   reason: string,
  *   genre: string,
  *   suggestedKeywords: string[]
- * }|null>}
+ * }>}
+ * @throws {AppError} API veya parse hatası
  */
 async function getStructuredMoodFromGemini(message) {
-  try {
-    const rawText = await generateContent(PROMPT.structuredMood(message), {
-      generationConfig: GENERATION_CONFIG.structured,
-    });
-    return parseJsonResponse(rawText);
-  } catch (err) {
-    console.error('[Gemini] Structured mood hatası:', err.message);
-    return null;
-  }
+  const rawText = await generateContent(PROMPT.structuredMood(message), {
+    generationConfig: GENERATION_CONFIG.structured,
+  });
+  return parseJsonResponse(rawText, { context: 'Duygu analizi' });
 }
 
 module.exports = getStructuredMoodFromGemini;
