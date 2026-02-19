@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; 
-import api from '../utils/axiosInstance';
+import { useNavigate } from 'react-router-dom';
+import { recommendApi, favoritesApi } from '../api';
 
 function MoodSearch() {
   const [tracks, setTracks] = useState([]);
@@ -39,7 +38,7 @@ function MoodSearch() {
     setSelectedMood(moodData.label);
 
     try {
-      const res = await api.get(`recommend/mood-music?mood=${encodeURIComponent(moodData.search)}`);
+      const res = await recommendApi.moodMusic(moodData.search);
       console.log(res);
       setTracks(res.data.tracks);
     } catch (err) {
@@ -57,11 +56,7 @@ function MoodSearch() {
     setActionStates(prev => ({ ...prev, [actionKey]: 'loading' }));
 
     try {
-      await api.post('favorites', {
-        trackName: track.trackName,
-        artistName: track.artistName,
-        spotifyUrl: track.spotifyUrl
-      });
+      await favoritesApi.add(track.trackName, track.artistName, track.spotifyUrl);
 
       setActionStates(prev => ({ ...prev, [actionKey]: 'success' }));
       

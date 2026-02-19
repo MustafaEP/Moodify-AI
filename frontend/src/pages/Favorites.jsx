@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom'; 
-import api from '../utils/axiosInstance';
+import { useNavigate } from 'react-router-dom';
+import { favoritesApi } from '../api';
 
 
 function Favorites() {
@@ -24,7 +23,7 @@ function Favorites() {
         const decoded = jwt_decode(token);
         const userId = decoded.id;
 
-        const res = await api.get(`favorites/${userId}`);
+        const res = await favoritesApi.getList(userId);
         setFavorites(res.data);
       } catch (err) {
         console.error('Favoriler yüklenemedi:', err);
@@ -47,8 +46,7 @@ function Favorites() {
     setDeleteStates(prev => ({ ...prev, [id]: 'deleting' }));
 
     try {
-      const token = localStorage.getItem('token');
-      await api.delete(`favorites/${id}`);
+      await favoritesApi.remove(id);
 
       // Başarılı silme animasyonu
       setDeleteStates(prev => ({ ...prev, [id]: 'deleted' }));

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import api from '../utils/axiosInstance';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import { recommendApi, favoritesApi } from '../api'; 
 
 function RegionMusic() {
   const [region, setRegion] = useState('');
@@ -74,7 +74,7 @@ function RegionMusic() {
     setTracks([]);
 
     try {
-      const res = await api.get(`recommend/region-music?region=${encodeURIComponent(region)}`);
+      const res = await recommendApi.regionMusic(region);
       setTracks(res.data.tracks);
     } catch (err) {
       console.error('Yöresel müzik hatası:', err);
@@ -95,14 +95,7 @@ function RegionMusic() {
     setFavoriteStates(prev => ({ ...prev, [trackId]: 'loading' }));
 
     try {
-      const token = localStorage.getItem('token');
-      await api.post('favorites', {
-        trackName: track.trackName,
-        artistName: track.artistName,
-        spotifyUrl: track.spotifyUrl
-      }, {
-        headers: { 'Authorization': token }
-      });
+      await favoritesApi.add(track.trackName, track.artistName, track.spotifyUrl);
       
       setFavoriteStates(prev => ({ ...prev, [trackId]: 'success' }));
       

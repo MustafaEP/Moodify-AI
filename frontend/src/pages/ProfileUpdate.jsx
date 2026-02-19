@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import api from '../utils/axiosInstance';
+import { userApi } from '../api';
 
 function ProfileUpdate() {
   const [form, setForm] = useState({ username: '', email: '', password: '', currentPassword: '' });
@@ -25,7 +25,7 @@ function ProfileUpdate() {
         const decoded = jwt_decode(token);
         setUserId(decoded.id);
 
-        const res = await api.get(`users/profile/${decoded.id}`);
+        const res = await userApi.getProfile(decoded.id);
         const userData = {
           username: res.data.username,
           email: res.data.email,
@@ -107,9 +107,7 @@ function ProfileUpdate() {
     try {
       // Eğer yeni şifre girilmişse mevcut şifreyi kontrol et
       if (form.password) {
-        const verify = await api.post(`users/verify-password/${userId}`, {
-          currentPassword: form.currentPassword
-        });
+        const verify = await userApi.verifyPassword(userId, form.currentPassword);
 
         if (verify.status !== 200) {
           setError('Mevcut şifre hatalı');
@@ -119,7 +117,7 @@ function ProfileUpdate() {
       }
 
       // Güncelleme isteği
-      await api.put(`users/update/${userId}`, form);
+      await userApi.updateUser(userId, form);
 
       setSuccess('Profil başarıyla güncellendi! Ana sayfaya yönlendiriliyorsunuz...');
       

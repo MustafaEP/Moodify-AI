@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom'; 
-import api from '../utils/axiosInstance';
+import { useNavigate } from 'react-router-dom';
+import { userApi, favoritesApi } from '../api';
 
 function Dashboard() {
   const [profile, setProfile] = useState(null);
@@ -23,8 +22,8 @@ function Dashboard() {
         const userId = decoded.id;
 
         const [profileRes, topArtistRes] = await Promise.all([
-          api.get(`users/profile/${userId}`),
-          api.get(`favorites/top-artist/${userId}`),
+          userApi.getProfile(userId),
+          favoritesApi.getTopArtist(userId),
         ]);
 
         setProfile({

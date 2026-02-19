@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import api from '../../utils/axiosInstance';
 import jwt_decode from 'jwt-decode';
+import { historyApi } from '../../api';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 function AiMoodHistory() {
@@ -16,7 +16,7 @@ function AiMoodHistory() {
         const token = localStorage.getItem('token');
         const decoded = jwt_decode(token);
 
-        const res = await api.get(`history/ai-mood-history/${decoded.id}`);
+        const res = await historyApi.getAiMoodHistory(decoded.id);
         setHistory(res.data);
       } catch (err) {
         console.error('Geçmiş alınamadı:', err);
@@ -34,7 +34,7 @@ function AiMoodHistory() {
     if (recommendations[moodHistoryId]) return; // Zaten yüklenmişse tekrar yükleme
 
     try {
-      const response = await api.get(`history/ai-mood-history/recommendation/${moodHistoryId}`);
+      const response = await historyApi.getAiMoodRecommendations(moodHistoryId);
       setRecommendations(prev => ({
         ...prev,
         [moodHistoryId]: response.data

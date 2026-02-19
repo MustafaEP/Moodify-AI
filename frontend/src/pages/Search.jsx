@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import api from '../utils/axiosInstance';
+import { spotifyApi, favoritesApi } from '../api';
 
 function Search() {
   const [query, setQuery] = useState('');
@@ -23,7 +22,7 @@ function Search() {
     setTracks([]);
 
     try {
-      const res = await api.get(`spotify/search?q=${encodeURIComponent(query)}`);
+      const res = await spotifyApi.search(query);
       setTracks(res.data);
       setSearched(true);
     } catch (err) {
@@ -47,12 +46,11 @@ function Search() {
     setFavoriteStates(prev => ({ ...prev, [trackId]: 'loading' }));
 
     try {
-      const token = localStorage.getItem('token');
-      await api.post('favorites', {
-        trackName: track.name,
-        artistName: track.artists[0].name,
-        spotifyUrl: track.external_urls.spotify
-      });
+      await favoritesApi.add(
+        track.name,
+        track.artists[0].name,
+        track.external_urls.spotify
+      );
       
       setFavoriteStates(prev => ({ ...prev, [trackId]: 'success' }));
       

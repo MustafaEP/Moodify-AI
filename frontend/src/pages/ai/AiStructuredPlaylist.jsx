@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../../utils/axiosInstance';
+import { recommendApi, favoritesApi } from '../../api';
 
 function AiStructuredPlaylist() {
   const [message, setMessage] = useState('');
@@ -23,7 +23,7 @@ function AiStructuredPlaylist() {
     setTracks([]);
 
     try {
-      const res = await api.post('recommend/ai-structured-playlist', { message });
+      const res = await recommendApi.aiStructuredPlaylist(message);
       setMoodInfo(res.data.moodInfo);
       setTracks(res.data.tracks);
     } catch (err) {
@@ -41,11 +41,11 @@ function AiStructuredPlaylist() {
     setFavoriteStates(prev => ({ ...prev, [trackId]: 'loading' }));
 
     try {
-      await api.post('favorites', {
-        trackName: track.name,
-        artistName: track.artists[0].name,
-        spotifyUrl: track.external_urls.spotify
-      });
+      await favoritesApi.add(
+        track.name,
+        track.artists[0].name,
+        track.external_urls.spotify
+      );
       
       setFavoriteStates(prev => ({ ...prev, [trackId]: 'success' }));
       

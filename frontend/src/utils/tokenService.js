@@ -1,17 +1,14 @@
-import axios from 'axios';
-import config from '../config';
+import { authApi } from '../api';
 
 export const refreshToken = async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
-  if (!refreshToken) {
+  const refreshTokenValue = localStorage.getItem('refreshToken');
+  if (!refreshTokenValue) {
     console.warn('Refresh token bulunamadı');
     return;
   }
 
   try {
-    const res = await axios.post(config.apiBaseUrl + '/auth/refresh-token', {
-      refreshToken
-    });
+    const res = await authApi.refreshToken(refreshTokenValue);
     localStorage.setItem('token', res.data.token);
     console.log('Token yenilendi');
   } catch (err) {
