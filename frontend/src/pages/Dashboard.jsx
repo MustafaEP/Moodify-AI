@@ -22,15 +22,24 @@ function Dashboard() {
         const decoded = jwt_decode(token);
         const userId = decoded.id;
 
-        const [profileRes, topArtistRes] = await Promise.all([
+        const [profileResult, topArtistResult] = await Promise.allSettled([
           userApi.getProfile(userId),
           favoritesApi.getTopArtist(userId),
         ]);
 
+        if (profileResult.status === 'rejected') {
+          throw profileResult.reason;
+        }
+
+        const profileData = profileResult.value.data;
+        const topArtistData = topArtistResult.status === 'fulfilled'
+          ? topArtistResult.value.data
+          : null;
+
         setProfile({
-          ...profileRes.data,
-          topArtist: topArtistRes.data.topArtist || 'Belirsiz',
-          topArtistCount: topArtistRes.data.count || 0,
+          ...profileData,
+          topArtist: topArtistData?.topArtist || 'Henüz yok',
+          topArtistCount: topArtistData?.count ?? 0,
         });
 
       } catch (err) {
