@@ -13,31 +13,10 @@ mongoose.connect(config.mongoUri)
   .catch((err) => console.error(err));
 
 
-const authRoute = require('./routes/auth');
-app.use('/api/auth', authRoute);
-
-const protectedRoute = require('./routes/protected');
-app.use('/api/protected', protectedRoute);
-
-const spotifyRoute = require('./routes/spotify');
-app.use('/api/spotify', spotifyRoute);
-
-const historyRoute = require('./routes/history');
-app.use('/api/history', historyRoute);
-
-const userRoute = require('./routes/users');
-app.use('/api/users', userRoute);
-
-const favoritesRoute = require('./routes/favorites');
-app.use('/api/favorites', favoritesRoute);
-
-const geminiRoute = require('./routes/gemini');
-app.use('/api/gemini', geminiRoute);
-
-const recommendRoute = require('./routes/recommend');
-app.use('/api/recommend', recommendRoute);
-
+const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
+
+app.use('/api', routes);
 
 app.get('/', (req, res) => {
   res.send('MoodMelody AI Backend Çalışıyor');

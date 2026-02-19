@@ -4,9 +4,10 @@ node_modules/
 # Vite build çıktısı
 dist/
 
-# .env dosyaları
+# .env dosyaları (.env.example şablon olarak commit edilir)
 .env
-.env.*
+.env.local
+.env.*.local
 
 # log dosyaları
 npm-debug.log*
