@@ -6,109 +6,79 @@ const mongoose = require('mongoose');
 const MoodHistory = require('../models/MoodHistory');
 const MusicRecommendation = require('../models/MusicRecommendation');
 const Favorite = require('../models/Favorite');
+const AppError = require('../utils/AppError');
 
 async function create(req, res) {
-  try {
-    const { mood, trackName, artistName } = req.body;
-    const newEntry = new MoodHistory({
-      userId: req.user.id,
-      mood,
-      trackName,
-      artistName,
-    });
-    await newEntry.save();
-    res.status(201).json('Kayıt eklendi');
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  const { mood, trackName, artistName } = req.body;
+  const newEntry = new MoodHistory({
+    userId: req.user.id,
+    mood,
+    trackName,
+    artistName,
+  });
+  await newEntry.save();
+  res.status(201).json('Kayıt eklendi');
 }
 
 async function getHistory(req, res) {
-  try {
-    const history = await MoodHistory.find({ userId: req.params.userId }).sort({ date: -1 });
-    res.json(history);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  const history = await MoodHistory.find({ userId: req.params.userId }).sort({ date: -1 });
+  res.json(history);
 }
 
 async function getStats(req, res) {
-  try {
-    const stats = await MoodHistory.aggregate([
-      { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
-      { $group: { _id: '$mood', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 1 },
-    ]);
+  const stats = await MoodHistory.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
+    { $group: { _id: '$mood', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: 1 },
+  ]);
 
-    if (stats.length === 0) return res.status(404).json('Geçmiş bulunamadı');
+  if (stats.length === 0) throw new AppError('Geçmiş bulunamadı', 404);
 
-    res.json(stats[0]);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  res.json(stats[0]);
 }
 
 async function getTopArtist(req, res) {
-  try {
-    const stats = await MoodHistory.aggregate([
-      { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
-      { $group: { _id: '$artistName', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 1 },
-    ]);
+  const stats = await MoodHistory.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
+    { $group: { _id: '$artistName', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: 1 },
+  ]);
 
-    if (stats.length === 0) return res.status(404).json('Sanatçı verisi yok');
+  if (stats.length === 0) throw new AppError('Sanatçı verisi yok', 404);
 
-    res.json(stats[0]);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  res.json(stats[0]);
 }
 
 async function getTopFavoriteArtist(req, res) {
-  try {
-    const stats = await Favorite.aggregate([
-      { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
-      { $group: { _id: '$artistName', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 1 },
-    ]);
+  const stats = await Favorite.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
+    { $group: { _id: '$artistName', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: 1 },
+  ]);
 
-    if (stats.length === 0) return res.status(404).json('Favori sanatçı bulunamadı');
+  if (stats.length === 0) throw new AppError('Favori sanatçı bulunamadı', 404);
 
-    res.json(stats[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json(err);
-  }
+  res.json(stats[0]);
 }
 
 async function getAiMoodHistory(req, res) {
-  try {
-    const history = await MoodHistory.find({
-      userId: req.params.userId,
-      trackName: 'AI Playlist Recommendation',
-    }).sort({ date: -1 });
+  const history = await MoodHistory.find({
+    userId: req.params.userId,
+    trackName: 'AI Playlist Recommendation',
+  }).sort({ date: -1 });
 
-    res.json(history);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json('Geçmiş alınamadı');
-  }
+  res.json(history);
 }
 
 async function getAiMoodRecommendations(req, res) {
-  try {
-    const recommendations = await MusicRecommendation.find({
-      moodHistoryId: req.params.moodHistoryId,
-    }).sort({ popularity: -1 });
+  const recommendations = await MusicRecommendation.find({
+    moodHistoryId: req.params.moodHistoryId,
+  }).sort({ popularity: -1 });
 
-    res.json(recommendations);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json('Müzikler alınamadı');
-  }
+  res.json(recommendations);
 }
 
 module.exports = {

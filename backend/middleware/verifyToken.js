@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const AppError = require('../utils/AppError');
 
 function verifyToken(req, res, next) {
   const token = req.headers['authorization'];
 
-  if (!token) return res.status(401).json('Token yok, yetkisiz işlem.');
+  if (!token) return next(new AppError('Token yok, yetkisiz işlem.', 401));
 
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
-    if (err) return res.status(403).json('Geçersiz token.');
+    if (err) return next(new AppError('Geçersiz token.', 403));
 
     req.user = decoded;
     next();

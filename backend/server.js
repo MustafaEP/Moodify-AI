@@ -31,16 +31,25 @@ app.use('/api/users', userRoute);
 const favoritesRoute = require('./routes/favorites');
 app.use('/api/favorites', favoritesRoute);
 
-const geminiRoute = require('./routes/gemini')
-app.use('/api/gemini', geminiRoute)
+const geminiRoute = require('./routes/gemini');
+app.use('/api/gemini', geminiRoute);
 
-const recommendRoute = require('./routes/recommend')
-app.use('/api/recommend', recommendRoute)
+const recommendRoute = require('./routes/recommend');
+app.use('/api/recommend', recommendRoute);
 
+const errorHandler = require('./middleware/errorHandler');
 
 app.get('/', (req, res) => {
   res.send('MoodMelody AI Backend Çalışıyor');
 });
+
+// 404 - tanımlı route bulunamadı
+app.use((req, res, next) => {
+  res.status(404).json({ success: false, message: 'Endpoint bulunamadı' });
+});
+
+// Merkezi hata yönetimi (tüm next(err) buraya düşer)
+app.use(errorHandler);
 
 app.listen(config.port, () => {
   console.log(`Sunucu çalışıyor: http://localhost:${config.port}`);

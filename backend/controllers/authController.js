@@ -6,38 +6,31 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const config = require('../config');
+const AppError = require('../utils/AppError');
 
 async function register(req, res) {
-  try {
-    const { username, email, password } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashed });
-    await newUser.save();
-    res.status(201).json('Kayıt başarılı');
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  const { username, email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  const newUser = new User({ username, email, password: hashed });
+  await newUser.save();
+  res.status(201).json('Kayıt başarılı');
 }
 
 async function login(req, res) {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json('Kullanıcı bulunamadı');
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) throw new AppError('Kullanıcı bulunamadı', 404);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json('Hatalı şifre');
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) throw new AppError('Hatalı şifre', 400);
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      config.jwtSecret,
-      { expiresIn: '1d' }
-    );
+  const token = jwt.sign(
+    { id: user._id, email: user.email },
+    config.jwtSecret,
+    { expiresIn: '1d' }
+  );
 
-    res.json({ token, username: user.username });
-  } catch (err) {
-    res.status(500).json(err);
-  }
+  res.json({ token, username: user.username });
 }
 
 function validateToken(req, res) {
@@ -48,13 +41,13 @@ function validateToken(req, res) {
   });
 }
 
-function refreshToken(req, res) {
+function refreshToken(req, res, next) {
   const { refreshToken } = req.body;
 
-  if (!refreshToken) return res.status(401).json('Refresh token yok');
+  if (!refreshToken) return next(new AppError('Refresh token yok', 401));
 
   jwt.verify(refreshToken, config.jwtSecret, (err, decoded) => {
-    if (err) return res.status(403).json('Geçersiz refresh token');
+    if (err) return next(new AppError('Geçersiz refresh token', 403));
 
     const newToken = jwt.sign(
       { id: decoded.id, email: decoded.email },

@@ -4,13 +4,14 @@
  */
 const express = require('express');
 const verifyToken = require('../middleware/verifyToken');
+const asyncHandler = require('../middleware/asyncHandler');
 const favoritesController = require('../controllers/favoritesController');
 
 const router = express.Router();
 
-router.post('/', verifyToken, favoritesController.add);
-router.get('/top-artist/:userId', favoritesController.getTopArtist);
-router.get('/:userId', verifyToken, favoritesController.list);
-router.delete('/:id', verifyToken, favoritesController.remove);
+router.post('/', verifyToken, asyncHandler(favoritesController.add));
+router.get('/top-artist/:userId', asyncHandler(favoritesController.getTopArtist));
+router.get('/:userId', verifyToken, asyncHandler(favoritesController.list));
+router.delete('/:id', verifyToken, asyncHandler(favoritesController.remove));
 
 module.exports = router;

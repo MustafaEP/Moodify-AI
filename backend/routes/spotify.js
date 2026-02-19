@@ -4,11 +4,12 @@
  */
 const express = require('express');
 const verifyToken = require('../middleware/verifyToken');
+const asyncHandler = require('../middleware/asyncHandler');
 const spotifyController = require('../controllers/spotifyController');
 
 const router = express.Router();
 
-router.get('/search', spotifyController.search);
-router.get('/recommend/:userId', verifyToken, spotifyController.recommend);
+router.get('/search', asyncHandler(spotifyController.search));
+router.get('/recommend/:userId', verifyToken, asyncHandler(spotifyController.recommend));
 
 module.exports = router;
