@@ -14,10 +14,10 @@ const VALID_MOODS = [
 const DEFAULT_FALLBACK_MOOD = 'calm';
 
 const GENERATION_CONFIG = {
-  simple: { temperature: 0.3, maxOutputTokens: 500 },
-  mood:   { temperature: 0.3, maxOutputTokens: 500 },
-  region: { temperature: 0.3, maxOutputTokens: 500 },
-  structured: { temperature: 0.3, maxOutputTokens: 300 },
+  simple:     { temperature: 0.2, maxOutputTokens: 20 },
+  mood:       { temperature: 0.7, maxOutputTokens: 600 },
+  region:     { temperature: 0.5, maxOutputTokens: 600 },
+  structured: { temperature: 0.4, maxOutputTokens: 500 },
 };
 
 module.exports = {
