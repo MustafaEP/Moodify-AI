@@ -200,7 +200,7 @@ function MoodSearch() {
             <div className="space-y-4">
               {tracks.map((track, index) => (
                 <div 
-                  key={track.id}
+                  key={track.id ?? `track-${track.trackName}-${track.artistName}-${index}`}
                   className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-all duration-200 group"
                 >
                   <div className="flex items-center justify-between">
