@@ -40,7 +40,6 @@ function MoodSearch() {
 
     try {
       const res = await recommendApi.moodMusic(moodData.search);
-      console.log(res);
       setTracks(res.data.tracks);
     } catch (err) {
       console.error('Mood arama hatası:', err);

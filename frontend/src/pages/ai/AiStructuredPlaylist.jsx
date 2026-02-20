@@ -220,39 +220,45 @@ function AiStructuredPlaylist() {
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
-                    <span className="mr-2">💭</span>
-                    Açıklama
-                  </h4>
-                  <p className="text-gray-300">{moodInfo.reason}</p>
-                </div>
+                {moodInfo.reason && (
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
+                      <span className="mr-2">💭</span>
+                      Açıklama
+                    </h4>
+                    <p className="text-gray-300">{moodInfo.reason}</p>
+                  </div>
+                )}
                 
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
-                    <span className="mr-2">🎵</span>
-                    Müzik Türü
-                  </h4>
-                  <p className="text-gray-300">{moodInfo.genre}</p>
-                </div>
+                {moodInfo.genre && (
+                  <div className="bg-gray-700 rounded-lg p-4">
+                    <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
+                      <span className="mr-2">🎵</span>
+                      Müzik Türü
+                    </h4>
+                    <p className="text-gray-300">{moodInfo.genre}</p>
+                  </div>
+                )}
               </div>
               
-              <div className="bg-gray-700 rounded-lg p-4">
-                <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
-                  <span className="mr-2">🏷️</span>
-                  Spotify Arama Etiketleri
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {(moodInfo.suggestedKeywords ?? []).map((keyword, index) => (
-                    <span 
-                      key={index}
-                      className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
+              {moodInfo.suggestedKeywords && moodInfo.suggestedKeywords.length > 0 && (
+                <div className="bg-gray-700 rounded-lg p-4">
+                  <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
+                    <span className="mr-2">🏷️</span>
+                    Spotify Arama Etiketleri
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {moodInfo.suggestedKeywords.map((keyword, index) => (
+                      <span 
+                        key={index}
+                        className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}

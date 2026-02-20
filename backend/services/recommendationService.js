@@ -40,10 +40,19 @@ async function getAiPlaylist(userId) {
 
 async function getAiStructuredPlaylist(userId, message) {
   const moodData = await getStructuredMoodFromGemini(message);
-
+  
+  const moodInfo = {
+    mood: moodData.mood || 'calm',
+    reason: moodData.reason || 'Kullanıcının duygu durumu analiz edildi.',
+    genre: moodData.genre || 'pop',
+    suggestedKeywords: Array.isArray(moodData.suggestedKeywords) 
+      ? moodData.suggestedKeywords 
+      : [moodData.mood || 'chill'],
+  };
+  
+  
   const token = await getSpotifyToken();
-  const keywords = Array.isArray(moodData.suggestedKeywords) ? moodData.suggestedKeywords : [];
-  const query = keywords.join(' ') || moodData.mood || 'chill';
+  const query = moodInfo.suggestedKeywords.join(' ') || moodInfo.mood || 'chill';
 
   const response = await axios.get(`${config.spotify.apiUrl}/search`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +63,7 @@ async function getAiStructuredPlaylist(userId, message) {
 
   const moodHistory = await MoodHistory.create({
     userId,
-    mood: moodData.mood,
+    mood: moodInfo.mood,
     trackName: 'AI Playlist Recommendation',
     artistName: 'AI',
     userText: message,
@@ -78,7 +87,7 @@ async function getAiStructuredPlaylist(userId, message) {
     await MusicRecommendation.insertMany(recommendations);
   }
 
-  return { moodInfo: moodData, tracks };
+  return { moodInfo, tracks };
 }
 
 async function getMoodMusic(mood) {

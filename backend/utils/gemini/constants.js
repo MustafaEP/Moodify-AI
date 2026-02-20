@@ -3,7 +3,7 @@
  * Model, endpoint ve varsayılan generation parametreleri tek noktadan yönetilir.
  */
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1';
-const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
 
 const VALID_MOODS = [
   'happy', 'sad', 'calm', 'energetic', 'angry',

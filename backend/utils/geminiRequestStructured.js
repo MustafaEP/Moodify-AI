@@ -23,7 +23,8 @@ async function getStructuredMoodFromGemini(message) {
   const rawText = await generateContent(PROMPT.structuredMood(message), {
     generationConfig: GENERATION_CONFIG.structured,
   });
-  return parseJsonResponse(rawText, { context: 'Duygu analizi' });
+  const parsed = parseJsonResponse(rawText, { context: 'Duygu analizi' });
+  return parsed;
 }
 
 module.exports = getStructuredMoodFromGemini;
