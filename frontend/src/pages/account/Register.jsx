@@ -35,15 +35,28 @@ function Register() {
     return true;
   };
     
-  const getPasswordStrengthSteps = (password) => {
-    const steps = [false, false, false, false];
+  const getPasswordStrength = (password) => {
+    let score = 0;
+    if (password.length >= 6) score++;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    return score; // 0-4
+  };
 
-    if (password.length >= 6) steps[0] = true;
-    if (password.length >= 8) steps[1] = true;
-    if (/[A-Z]/.test(password)) steps[2] = true;
-    if (/[0-9]/.test(password)) steps[3] = true;
+  const getStrengthColor = (score) => {
+    if (score <= 1) return 'bg-red-500';
+    if (score === 2) return 'bg-orange-500';
+    if (score === 3) return 'bg-yellow-500';
+    return 'bg-green-500';
+  };
 
-    return steps;
+  const getStrengthLabel = (score) => {
+    if (score === 0) return '';
+    if (score <= 1) return 'Zayıf';
+    if (score === 2) return 'Orta';
+    if (score === 3) return 'İyi';
+    return 'Güçlü';
   };
 
   const handleSubmit = async e => {
@@ -211,16 +224,30 @@ function Register() {
             {/* Password Strength Indicator */}
             {form.password && (
               <div className="space-y-2">
-                <div className="text-xs text-gray-400">Şifre Gücü:</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-400">Şifre Gücü:</span>
+                  <span className={`text-xs font-medium ${
+                    getPasswordStrength(form.password) <= 1 ? 'text-red-400' :
+                    getPasswordStrength(form.password) === 2 ? 'text-orange-400' :
+                    getPasswordStrength(form.password) === 3 ? 'text-yellow-400' :
+                    'text-green-400'
+                  }`}>
+                    {getStrengthLabel(getPasswordStrength(form.password))}
+                  </span>
+                </div>
                 <div className="flex space-x-1">
-                  {getPasswordStrengthSteps(form.password).map((stepPassed, idx) => (
-                    <div
-                      key={idx}
-                      className={`h-1 w-1/4 rounded transition-colors duration-200 ${
-                        stepPassed ? 'bg-green-500' : 'bg-gray-600'
-                      }`}
-                    ></div>
-                  ))}
+                  {[0, 1, 2, 3].map((idx) => {
+                    const score = getPasswordStrength(form.password);
+                    const filled = idx < score;
+                    return (
+                      <div
+                        key={idx}
+                        className={`h-1 w-1/4 rounded transition-colors duration-200 ${
+                          filled ? getStrengthColor(score) : 'bg-gray-600'
+                        }`}
+                      ></div>
+                    );
+                  })}
                 </div>
               </div>
             )}
