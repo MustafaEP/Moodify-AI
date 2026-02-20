@@ -85,7 +85,7 @@ const Navigation = () => {
             
             {/* Profile Dropdown */}
             <div className="relative group">
-              <button className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-200 text-sm font-medium">
+              <button className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-200 text-sm font-medium cursor-pointer">
                 <span className="group-hover:scale-110 transition-transform duration-200">👤</span>
                 <span>Hesap</span>
                 <span className="text-xs transition-transform group-hover:rotate-180 duration-300">▼</span>
@@ -102,7 +102,7 @@ const Navigation = () => {
                   <div className="border-t border-gray-600 my-1"></div>
                   <button
                     onClick={logout}
-                    className="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-gray-700 transition-all duration-200 group"
+                    className="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-gray-700 transition-all duration-200 group cursor-pointer"
                   >
                     <span className="mr-3 group-hover:scale-110 transition-transform duration-200">🚪</span>
                     Çıkış Yap
@@ -152,7 +152,7 @@ const Navigation = () => {
                   logout();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center px-3 py-3 text-red-400 hover:text-red-300 hover:bg-gray-700 rounded-lg transition-all duration-200"
+                className="w-full flex items-center px-3 py-3 text-red-400 hover:text-red-300 hover:bg-gray-700 rounded-lg transition-all duration-200 cursor-pointer"
               >
                 <span className="mr-3 text-lg">🚪</span>
                 <span className="font-medium">Çıkış Yap</span>
