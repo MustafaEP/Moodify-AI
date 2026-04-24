@@ -1,0 +1,13 @@
+services:
+  moodify-ai-backend:
+    image: moodify-ai-backend:latest
+    container_name: moodify-ai-backend
+    restart: always
+    env_file:
+      - ../../../.env
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true

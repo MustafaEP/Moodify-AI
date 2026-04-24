@@ -11,9 +11,7 @@ async function aiPlaylist(req, res) {
 
 async function aiStructuredPlaylist(req, res) {
   const { message } = req.body;
-  console.log("message: ", message);
   const result = await recommendationService.getAiStructuredPlaylist(req.user.id, message);
-  console.log("result: ", result);
   res.json(result);
 }
 

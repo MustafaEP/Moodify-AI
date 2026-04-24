@@ -1,0 +1,11 @@
+services:
+  moodify-ai-web:
+    image: moodify-ai-web:latest
+    container_name: moodify-ai-web
+    restart: always
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true

@@ -1,0 +1,21 @@
+services:
+  moodify-ai-mongo:
+    image: mongo:7
+    container_name: moodify-ai-mongo
+    restart: always
+    volumes:
+      - moodify_ai_mongo_data:/data/db
+    networks:
+      - edge
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  edge:
+    external: true
+
+volumes:
+  moodify_ai_mongo_data:
